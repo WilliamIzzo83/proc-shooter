@@ -135,81 +135,7 @@ class astro_background extends component {
   boolean isDead() { return false; }
 }
 
-class move extends component {
-  final static int COMPONENT_TYPE_MOVE = 5;
-  private PVector position_;
-  private PVector direction_;
-  
-  move(int component_id, PVector direction) {
-    super(component_id);
-    position_ = new PVector(0.0, 0.0);
-    direction_ = direction;
-  }
-  
-  int componentType() { return COMPONENT_TYPE_MOVE; }
-  
-  i_component copy() {
-    return new move(component_id_, direction_);
-  }
-  
-  void sendEvent(event e) {
-    if (e.event_type() != actor_position_event.EVENT_ACTOR_POSITION) { return; }
-    actor_position_event pe = (actor_position_event)e;
-    position_ = pe.position();
-  }
-  
-  void update() {
-    position_.add(direction_); //<>//
-    
-    actor_position_update_event pu = new actor_position_update_event(position_);
-    parent_.sendEvent(pu);
-  }
-  
-  boolean isAlive() { return true; }
-  boolean isDead() { return false; }
-}
-
-class move_towards extends component {
-  final static int COMPONENT_TYPE_MOVE_TOWARDS = 6;
-  private PVector position_;
-  private PVector target_;
-  private final static float eps = 0.1;
-  move_towards(int component_id) {
-    super(component_id);
-    position_ = new PVector(0.0, 0.0);
-  }
-  
-  void init() {
-    target_ = position_.copy();
-  }
-  
-  int componentType() { return COMPONENT_TYPE_MOVE_TOWARDS; }
-  
-  i_component copy() {
-    return new move_towards(component_id_);
-  }
-  
-  void setTarget(PVector target) {
-    target_ = target.copy();
-  }
-  
-  void update() {
-    
-    v_move_towards(position_, target_);
-    actor_position_update_event pu = new actor_position_update_event(position_);
-    parent_.sendEvent(pu);
-  }
-  
-  void sendEvent(event e) {
-    if(e.event_type() == move_towards_event.EVENT_MOVE_TOWARDS) {
-      move_towards_event mte = (move_towards_event)e;
-      target_ = mte.target().copy();
-    }
-  }
-  
-  boolean isAlive() { return true; }
-  boolean isDead() { return false; }
-}
+ //<>//
 
 class player_controller extends component {
   final static int COMPONENT_PLAYER_CONTROLLER = 7;
@@ -242,8 +168,8 @@ class player_controller extends component {
       target_position_.y = me.y();
       
       if(me.button_pressed()) {
-        spawn_event spawn = new spawn_event(4, position_);
-        
+        // spawn_event spawn = new spawn_event(4, position_);
+        // TODO: send spawn event to event bus 
       }
     }
   }
